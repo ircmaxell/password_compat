@@ -121,7 +121,7 @@ if (!function_exists('password_make_salt')) {
 			}
 		}
 
-		if (!$raw) {
+		if (!$raw_output) {
 			$buffer = str_replace('+', '.', base64_encode($buffer));
 		}
 		return substr($buffer, 0, $length);
