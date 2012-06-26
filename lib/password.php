@@ -1,19 +1,15 @@
 <?php
 
 defined('PASSWORD_BCRYPT') or define('PASSWORD_BCRYPT', '2y');
-defined('PASSWORD_MD5') or define('PASSWORD_MD5', '1');
-defined('PASSWORD_SHA256') or define('PASSWORD_SHA256', '5');
-defined('PASSWORD_SHA512') or define('PASSWORD_SHA512', '6');
 
 defined('PASSWORD_DEFAULT') or define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
 
 define('PASSWORD_BCRYPT_DEFAULT_COST', 11);
-define('PASSWORD_SHA_DEFAULT_ROUNDS', 5000);
 
-if (!function_exists('password_create')) {
-	function password_create($password, $algo = PASSWORD_DEFAULT, $options = array()) {
+if (!function_exists('password_hash')) {
+	function password_hash($password, $algo = PASSWORD_DEFAULT, $options = array()) {
 		if (!function_exists('crypt')) {
-			trigger_error("Crypt must be loaded for password_create to function", E_USER_WARNING);
+			trigger_error("Crypt must be loaded for password_hash to function", E_USER_WARNING);
 			return false;
 		}
 		if (!is_string($password)) {
@@ -35,23 +31,6 @@ if (!function_exists('password_create')) {
 				}
 				$required_salt_len = 22;
 				$hash_format = sprintf("$2y$%02d$", $cost);
-				break;
-			case PASSWORD_MD5:
-				$hash_format = "$1$";
-				$required_salt_len = 12;
-				break;
-			case PASSWORD_SHA256:
-			case PASSWORD_SHA512:
-				$rounds = PASSWORD_SHA_DEFAULT_ROUNDS;
-				if (isset($options['rounds'])) {
-					$rounds = $options['rounds'];
-					if ($rounds < 1000 || $rounds > 999999999) {
-						trigger_error(sprintf("Invalid SHA rounds parameter specified: %d", $rounds), E_USER_WARNING);
-						return false;
-					}
-				}
-				$required_salt_len = 16;
-				$hash_format = sprintf("$%s$rounds=%d$", $algo, $rounds);
 				break;
 			default:
 				trigger_error(sprintf("Unknown password hashing algorithm: %s", $algo), E_USER_WARNING);
