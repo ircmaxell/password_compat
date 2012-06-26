@@ -95,7 +95,7 @@ if (!function_exists('password_make_salt')) {
 			return false;
 		}
 
-		if ($raw) {
+		if ($raw_output) {
 			$raw_length = $length;
 		} else {
 			$raw_length = (int) ($length * 3 / 4 + 1);
