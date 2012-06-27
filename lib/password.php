@@ -46,7 +46,7 @@ if (!function_exists('password_hash')) {
 			if (strlen($salt) < $required_salt_len) {
 				trigger_error(sprintf("Provided salt is too short: %d expecting %d", strlen($salt), $required_salt_len), E_USER_WARNING);
 				return false;
-			} elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#', $salt)) {
+			} elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
 				$salt = str_replace('+', '.', base64_encode($salt));
 			}
 		} else {
