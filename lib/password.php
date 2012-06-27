@@ -4,7 +4,7 @@ defined('PASSWORD_BCRYPT') or define('PASSWORD_BCRYPT', '2y');
 
 defined('PASSWORD_DEFAULT') or define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
 
-define('PASSWORD_BCRYPT_DEFAULT_COST', 11);
+ini_get('password.bcrypt_cost') or ini_set('password.bcrypt_cost', '11');
 
 if (!function_exists('password_hash')) {
 	function password_hash($password, $algo = PASSWORD_DEFAULT, $options = array()) {
@@ -21,7 +21,7 @@ if (!function_exists('password_hash')) {
 		}
 		switch ($algo) {
 			case PASSWORD_BCRYPT:
-				$cost = PASSWORD_BCRYPT_DEFAULT_COST;
+				$cost = (int) ini_get('password.bcrypt_cost');
 				if (isset($options['cost'])) {
 					$cost = $options['cost'];
 					if ($cost < 4 || $cost > 31) {
