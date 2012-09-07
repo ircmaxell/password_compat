@@ -1,0 +1,21 @@
+{
+	"name": "ircmaxell/PasswordCompat",
+	"description": "A compatibility library for the proposed simplified password hashing algorithm: https://wiki.php.net/rfc/password_hash",
+	"version": "1.0.0-beta1",
+	"keywords": ["password", "hashing"],
+	"homepage": "https://github.com/ircmaxell/password_compat",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Anthony Ferrara",
+			"email": "ircmaxell@php.net",
+			"homepage": "http://blog.ircmaxell.com"
+		}
+	],
+	"require": {
+		"php": ">= 5.3.2"
+	},
+	"autoload": {
+		"files": ["lib/password.php"]
+	}
+}
