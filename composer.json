@@ -1,5 +1,5 @@
 {
-	"name": "ircmaxell/PasswordCompat",
+	"name": "ircmaxell/password-compat",
 	"description": "A compatibility library for the proposed simplified password hashing algorithm: https://wiki.php.net/rfc/password_hash",
 	"version": "1.0.0-beta1",
 	"keywords": ["password", "hashing"],
