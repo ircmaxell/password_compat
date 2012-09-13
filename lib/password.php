@@ -225,6 +225,6 @@ function __password_make_salt($length) {
 			$buffer .= chr(mt_rand(0, 255));
 		}
 	}
-	$buffer = str_replace('+', '.', base64_encode($buffer));
+	$buffer = strtr(base64_encode($buffer), '+', '.');
 	return substr($buffer, 0, $length);
 }
