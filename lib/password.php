@@ -20,7 +20,7 @@ if (!function_exists('password_hash')) {
 	 *
 	 * @returns string|false The hashed password, or false on error.
 	 */
-	function password_hash($password, $algo, $options = array()) {
+	function password_hash($password, $algo, array $options = array()) {
 		if (!function_exists('crypt')) {
 			trigger_error("Crypt must be loaded for password_hash to function", E_USER_WARNING);
 			return null;
@@ -167,7 +167,7 @@ if (!function_exists('password_verify')) {
 	 */
     function password_verify($password, $hash) {
 		if (!function_exists('crypt')) {
-			trigger_error("Crypt must be loaded for password_create to function", E_USER_WARNING);
+			trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
 			return false;
 		}
 		$ret = crypt($password, $hash);
