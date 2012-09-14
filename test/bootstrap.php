@@ -1,3 +1,3 @@
 <?php
 
-require_once '../lib/password.php';
+require_once '../lib/password_hash.php';
