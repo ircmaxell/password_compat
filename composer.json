@@ -4,7 +4,7 @@
 	"version": "1.0.0-beta1",
 	"keywords": ["password", "hashing"],
 	"homepage": "https://github.com/ircmaxell/password_compat",
-	"license": "MIT",
+	"license": "PHP",
 	"authors": [
 		{
 			"name": "Anthony Ferrara",
