@@ -1,4 +1,11 @@
 <?php
+/**
+ * A Compatibility library with PHP 5.5's simplified password hashing API.
+ *
+ * @author Anthony Ferrara <ircmaxell@php.net>
+ * @license http://www.php.net/license/3_01.txt PHP 3.0.1
+ * @copyright 2012 The Authors
+ */
 
 if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 	trigger_error("The Password Compatibility Library requires PHP >= 5.3.7", E_USER_WARNING);
