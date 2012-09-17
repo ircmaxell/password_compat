@@ -3,7 +3,7 @@
  * A Compatibility library with PHP 5.5's simplified password hashing API.
  *
  * @author Anthony Ferrara <ircmaxell@php.net>
- * @license http://www.php.net/license/3_01.txt PHP 3.0.1
+ * @license http://www.opensource.org/licenses/mit-license.html MIT License
  * @copyright 2012 The Authors
  */
 
