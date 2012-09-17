@@ -112,7 +112,8 @@ if (!defined('PASSWORD_BCRYPT')) {
 					if ($i < $bl) {
 						$buffer[$i] ^= chr(mt_rand(0, 255));
 					} else {
-						$buffer .= chr(mt_rand(0, 255));
+						$buffer .= pack('L', mt_rand());
+						$i += 3;
 					}
 				}
 			}
