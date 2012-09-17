@@ -85,48 +85,29 @@ if (!defined('PASSWORD_BCRYPT')) {
 				$salt = str_replace('+', '.', base64_encode($salt));
 			}
 		} else {
-			$buffer = '';
+			$salt = '';
 			$raw_length = (int) ($required_salt_len * 3 / 4 + 1);
-			$buffer_valid = false;
 			if (function_exists('mcrypt_create_iv')) {
-				$buffer = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
-				if ($buffer) {
-					$buffer_valid = true;
-				}
+				$salt = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
 			}
-			if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
-				$buffer = openssl_random_pseudo_bytes($raw_length);
-				if ($buffer) {
-					$buffer_valid = true;
-				}
+			if (!$salt && function_exists('openssl_random_pseudo_bytes')) {
+				$salt = openssl_random_pseudo_bytes($raw_length);
 			}
-			if (!$buffer_valid && file_exists('/dev/urandom')) {
-				$f = @fopen('/dev/urandom', 'r');
-				if ($f) {
-					$read = strlen($buffer);
-					while ($read < $raw_length) {
-						$buffer .= fread($f, $raw_length - $read);
-						$read = strlen($buffer);
-					}
-					fclose($f);
-					if ($read >= $raw_length) {
-						$buffer_valid = true;
-					}
-				}
+			if (!$salt && file_exists('/dev/urandom')) {
+				$salt = @file_get_contents('/dev/urandom', false, null, -1, $raw_length);
 			}
-			if (!$buffer_valid || strlen($buffer) < $raw_length) {
-				$bl = strlen($buffer);
+			if (strlen($salt) < $raw_length) {
+				$bl = strlen($salt);
 				for ($i = 0; $i < $raw_length; $i++) {
 					if ($i < $bl) {
-						$buffer ^= chr(mt_rand(0, 255));
+						$salt[$i] ^= chr(mt_rand(0, 255));
 					} else {
-						$buffer .= chr(mt_rand(0, 255));
+						$salt .= pack('L', mt_rand());
+						$i += 3;
 					}
 				}
 			}
-			$buffer = str_replace('+', '.', base64_encode($buffer));
-			$salt = $buffer;
-
+			$salt = str_replace('+', '.', base64_encode($salt));
 		}
 		$salt = substr($salt, 0, $required_salt_len);
 
