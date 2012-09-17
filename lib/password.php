@@ -101,17 +101,9 @@ if (!defined('PASSWORD_BCRYPT')) {
 				}
 			}
 			if (!$buffer_valid && file_exists('/dev/urandom')) {
-				$f = @fopen('/dev/urandom', 'r');
-				if ($f) {
-					$read = strlen($buffer);
-					while ($read < $raw_length) {
-						$buffer .= fread($f, $raw_length - $read);
-						$read = strlen($buffer);
-					}
-					fclose($f);
-					if ($read >= $raw_length) {
-						$buffer_valid = true;
-					}
+				$buffer = @file_get_contents('/dev/urandom', false, null, -1, $raw_length);
+				if (strlen($buffer) >= $raw_length) {
+					$buffer_valid = true;
 				}
 			}
 			if (!$buffer_valid || strlen($buffer) < $raw_length) {
