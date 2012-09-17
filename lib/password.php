@@ -100,7 +100,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 					$buffer_valid = true;
 				}
 			}
-			if (!$buffer_valid && file_exists('/dev/urandom')) {
+			if (!$buffer_valid && @file_exists('/dev/urandom')) {
 				$f = @fopen('/dev/urandom', 'r');
 				if ($f) {
 					$read = strlen($buffer);
