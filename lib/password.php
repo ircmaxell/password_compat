@@ -170,9 +170,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 		}
 		return $return;
 	}
-}
 
-if (!function_exists('password_needs_rehash')) {
 	/**
 	 * Determine if the password hash needs to be rehashed according to the options provided
 	 *
