@@ -85,31 +85,29 @@ if (!defined('PASSWORD_BCRYPT')) {
 				$salt = str_replace('+', '.', base64_encode($salt));
 			}
 		} else {
-			$buffer = '';
+			$salt = '';
 			$raw_length = (int) ($required_salt_len * 3 / 4 + 1);
 			if (function_exists('mcrypt_create_iv')) {
-				$buffer = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
+				$salt = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
 			}
-			if (!$buffer && function_exists('openssl_random_pseudo_bytes')) {
-				$buffer = openssl_random_pseudo_bytes($raw_length);
+			if (!$salt && function_exists('openssl_random_pseudo_bytes')) {
+				$salt = openssl_random_pseudo_bytes($raw_length);
 			}
-			if (!$buffer && file_exists('/dev/urandom')) {
-				$buffer = @file_get_contents('/dev/urandom', false, null, -1, $raw_length);
+			if (!$salt && file_exists('/dev/urandom')) {
+				$salt = @file_get_contents('/dev/urandom', false, null, -1, $raw_length);
 			}
-			if (strlen($buffer) < $raw_length) {
-				$bl = strlen($buffer);
+			if (strlen($salt) < $raw_length) {
+				$bl = strlen($salt);
 				for ($i = 0; $i < $raw_length; $i++) {
 					if ($i < $bl) {
-						$buffer[$i] ^= chr(mt_rand(0, 255));
+						$salt[$i] ^= chr(mt_rand(0, 255));
 					} else {
-						$buffer .= pack('L', mt_rand());
+						$salt .= pack('L', mt_rand());
 						$i += 3;
 					}
 				}
 			}
-			$buffer = str_replace('+', '.', base64_encode($buffer));
-			$salt = $buffer;
-
+			$salt = str_replace('+', '.', base64_encode($salt));
 		}
 		$salt = substr($salt, 0, $required_salt_len);
 
