@@ -13,11 +13,11 @@ if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 	return;
 }
 
-defined('PASSWORD_BCRYPT') or define('PASSWORD_BCRYPT', 1);
+if (!defined('PASSWORD_BCRYPT')) {
 
-defined('PASSWORD_DEFAULT') or define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
+	define('PASSWORD_BCRYPT', 1);
+	define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
 
-if (!function_exists('password_hash')) {
 	/**
 	 * Hash the password using the specified algorithm
 	 *
@@ -85,7 +85,48 @@ if (!function_exists('password_hash')) {
 				$salt = str_replace('+', '.', base64_encode($salt));
 			}
 		} else {
-			$salt = __password_make_salt($required_salt_len);
+			$buffer = '';
+			$raw_length = (int) ($required_salt_len * 3 / 4 + 1);
+			$buffer_valid = false;
+			if (function_exists('mcrypt_create_iv')) {
+				$buffer = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
+				if ($buffer) {
+					$buffer_valid = true;
+				}
+			}
+			if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
+				$buffer = openssl_random_pseudo_bytes($raw_length);
+				if ($buffer) {
+					$buffer_valid = true;
+				}
+			}
+			if (!$buffer_valid && file_exists('/dev/urandom')) {
+				$f = @fopen('/dev/urandom', 'r');
+				if ($f) {
+					$read = strlen($buffer);
+					while ($read < $raw_length) {
+						$buffer .= fread($f, $raw_length - $read);
+						$read = strlen($buffer);
+					}
+					fclose($f);
+					if ($read >= $raw_length) {
+						$buffer_valid = true;
+					}
+				}
+			}
+			if (!$buffer_valid || strlen($buffer) < $raw_length) {
+				$bl = strlen($buffer);
+				for ($i = 0; $i < $raw_length; $i++) {
+					if ($i < $bl) {
+						$buffer ^= chr(mt_rand(0, 255));
+					} else {
+						$buffer .= chr(mt_rand(0, 255));
+					}
+				}
+			}
+			$buffer = str_replace('+', '.', base64_encode($buffer));
+			$salt = $buffer;
+
 		}
 		$salt = substr($salt, 0, $required_salt_len);
 
@@ -99,9 +140,7 @@ if (!function_exists('password_hash')) {
 
 		return $ret;
 	}
-}
 
-if (!function_exists('password_get_info')) {
 	/**
 	 * Get information about the password hash. Returns an array of the information
 	 * that was used to generate the password hash.
@@ -161,9 +200,7 @@ if (!function_exists('password_needs_rehash')) {
 		}
 		return false;
 	}
-}
 
-if (!function_exists('password_verify')) {
 	/**
 	 * Verify a password against a hash using a timing attack resistant approach
 	 *
@@ -192,52 +229,4 @@ if (!function_exists('password_verify')) {
 }
 
 
-/**
- * Function to make a salt
- *
- * DO NOT USE THIS FUNCTION DIRECTLY
- *
- * @internal
- */
-function __password_make_salt($length) {
-	if ($length <= 0) {
-		trigger_error(sprintf("Length cannot be less than or equal zero: %d", $length), E_USER_WARNING);
-		return false;
-	}
-	$buffer = '';
-	$raw_length = (int) ($length * 3 / 4 + 1);
-	$buffer_valid = false;
-	if (function_exists('mcrypt_create_iv')) {
-		$buffer = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
-		if ($buffer) {
-			$buffer_valid = true;
-		}
-	}
-	if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
-		$buffer = openssl_random_pseudo_bytes($raw_length);
-		if ($buffer) {
-			$buffer_valid = true;
-		}
-	}
-	if (!$buffer_valid && file_exists('/dev/urandom')) {
-		$f = @fopen('/dev/urandom', 'r');
-		if ($f) {
-			$read = strlen($buffer);
-			while ($read < $raw_length) {
-				$buffer .= fread($f, $raw_length - $read);
-				$read = strlen($buffer);
-			}
-			fclose($f);
-			if ($read >= $raw_length) {
-				$buffer_valid = true;
-			}
-		}
-	}
-	if (!$buffer_valid) {
-		for ($i = 0; $i < $raw_length; $i++) {
-			$buffer .= chr(mt_rand(0, 255));
-		}
-	}
-	$buffer = str_replace('+', '.', base64_encode($buffer));
-	return substr($buffer, 0, $length);
-}
+
