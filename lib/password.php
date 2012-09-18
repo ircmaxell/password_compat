@@ -118,7 +118,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 				$bl = strlen($buffer);
 				for ($i = 0; $i < $raw_length; $i++) {
 					if ($i < $bl) {
-						$buffer ^= chr(mt_rand(0, 255));
+						$buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
 					} else {
 						$buffer .= chr(mt_rand(0, 255));
 					}
