@@ -51,6 +51,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 						return null;
 					}
 				}
+				$raw_length = 16;
 				$required_salt_len = 22;
 				$hash_format = sprintf("$2y$%02d$", $cost);
 				break;
@@ -86,7 +87,6 @@ if (!defined('PASSWORD_BCRYPT')) {
 			}
 		} else {
 			$buffer = '';
-			$raw_length = (int) ($required_salt_len * 3 / 4 + 1);
 			$buffer_valid = false;
 			if (function_exists('mcrypt_create_iv')) {
 				$buffer = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
