@@ -25,7 +25,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 	 * @param int    $algo     The algorithm to use (Defined by PASSWORD_* constants)
 	 * @param array  $options  The options for the algorithm to use
 	 *
-	 * @returns string|false The hashed password, or false on error.
+	 * @return string|false The hashed password, or false on error.
 	 */
 	function password_hash($password, $algo, array $options = array()) {
 		if (!function_exists('crypt')) {
