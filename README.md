@@ -10,7 +10,11 @@ Status: BETA-1
 Requirements
 ============
 
-This library requires PHP >= 5.3.7. If you attempt to use it on an earlier version, it will raise an error and not define the API.
+This library requires `PHP >= 5.3.7` OR a version that has the `$2y` fix backported into it (such as Debian provides).
+
+The runtime checks have been removed due to this version issue. To see if password_compat is available for your system, run the included `version-test.php`. If it outputs "Pass", you can safely use the library. If not, you cannot. 
+
+If you attempt to use password-compat on an unsupported version, attempts to create or verify hashes will return `false`. You have been warned!
 
 The reason for this is that PHP prior to 5.3.7 contains a security issue with its BCRYPT implementation. Therefore, it's highly recommended that you upgrade to a newer version of PHP prior to using this layer.
 
