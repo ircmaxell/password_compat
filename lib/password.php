@@ -76,7 +76,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 				trigger_error(sprintf("password_hash(): Provided salt is too short: %d expecting %d", strlen($salt), $required_salt_len), E_USER_WARNING);
 				return null;
 			} elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
-				$salt = str_replace('+', '.', base64_encode($salt));
+				$salt = strtr(base64_encode($salt), '+', '.');
 			}
 		} else {
 			$buffer = '';
@@ -118,7 +118,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 					}
 				}
 			}
-			$salt = str_replace('+', '.', base64_encode($buffer));
+			$salt = strtr(base64_encode($buffer), '+', '.');
 
 		}
 		$salt = substr($salt, 0, $required_salt_len);
@@ -212,7 +212,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 
 		$status = 0;
 		for ($i = 0; $i < strlen($ret); $i++) {
-			$status |= (ord($ret[$i]) ^ ord($hash[$i]));
+			$status |= ord($ret[$i] ^ $hash[$i]);
 		}
 
 		return $status === 0;
