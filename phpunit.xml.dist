@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit backupGlobals="true"
          backupStaticAttributes="false"
-         bootstrap="./bootstrap.php"
+         bootstrap="lib/password.php"
          colors="false"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -18,12 +18,12 @@
          verbose="false">
     <testsuites>
         <testsuite name="Unit">
-            <directory>./Unit</directory>
+            <directory>test/Unit</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist>
-            <directory suffix=".php">../lib/</directory>
+            <directory suffix=".php">lib/</directory>
         </whitelist>
     </filter>
 </phpunit>
