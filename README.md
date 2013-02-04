@@ -1,11 +1,12 @@
 password_compat
 ===============
 
+[![Build Status](https://travis-ci.org/ircmaxell/password_compat.png?branch=master)](https://travis-ci.org/ircmaxell/password_compat)
+
 This library is intended to provide forward compatibility with the password_* functions being worked on for PHP 5.5.
 
 See [the RFC](https://wiki.php.net/rfc/password_hash) for more detailed information.
 
-Status: BETA-1
 
 Requirements
 ============
