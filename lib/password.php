@@ -94,18 +94,16 @@ if (!defined('PASSWORD_BCRYPT')) {
 					$buffer_valid = true;
 				}
 			}
-			if (!$buffer_valid && file_exists('/dev/urandom')) {
-				$f = @fopen('/dev/urandom', 'r');
-				if ($f) {
+			if (!$buffer_valid && is_readable('/dev/urandom')) {
+				$f = fopen('/dev/urandom', 'r');
+				$read = strlen($buffer);
+				while ($read < $raw_length) {
+					$buffer .= fread($f, $raw_length - $read);
 					$read = strlen($buffer);
-					while ($read < $raw_length) {
-						$buffer .= fread($f, $raw_length - $read);
-						$read = strlen($buffer);
-					}
-					fclose($f);
-					if ($read >= $raw_length) {
-						$buffer_valid = true;
-					}
+				}
+				fclose($f);
+				if ($read >= $raw_length) {
+					$buffer_valid = true;
 				}
 			}
 			if (!$buffer_valid || strlen($buffer) < $raw_length) {
