@@ -82,7 +82,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 			$buffer = '';
 			$raw_length = (int) ($required_salt_len * 3 / 4 + 1);
 			$buffer_valid = false;
-			if (function_exists('mcrypt_create_iv')) {
+			if (function_exists('mcrypt_create_iv') && !defined('PHALANGER')) {
 				$buffer = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
 				if ($buffer) {
 					$buffer_valid = true;
