@@ -198,7 +198,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 	 *
 	 * @return boolean If the password matches the hash
 	 */
-    function password_verify($password, $hash) {
+	function password_verify($password, $hash) {
 		if (!function_exists('crypt')) {
 			trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
 			return false;
