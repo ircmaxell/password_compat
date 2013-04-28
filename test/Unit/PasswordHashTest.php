@@ -1,7 +1,7 @@
 <?php
 
 class PasswordHashTest extends PHPUnit_Framework_TestCase {
-	
+
 	public function testFuncExists() {
 		$this->assertTrue(function_exists('password_hash'));
 	}
@@ -33,49 +33,49 @@ class PasswordHashTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-     * @expectedException PHPUnit_Framework_Error
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testInvalidAlgo2() {
 		password_hash('foo', 2);
 	}
 
 	/**
-     * @expectedException PHPUnit_Framework_Error
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testInvalidPassword() {
 		password_hash(array(), 1);
 	}
 
 	/**
-     * @expectedException PHPUnit_Framework_Error
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testInvalidSalt() {
 		password_hash('foo', PASSWORD_BCRYPT, array('salt' => array()));
 	}
 
 	/**
-     * @expectedException PHPUnit_Framework_Error
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testInvalidBcryptCostLow() {
 		password_hash('foo', PASSWORD_BCRYPT, array('cost' => 3));
 	}
-		
+
 	/**
-     * @expectedException PHPUnit_Framework_Error
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testInvalidBcryptCostHigh() {
 		password_hash('foo', PASSWORD_BCRYPT, array('cost' => 32));
 	}
 
 	/**
-     * @expectedException PHPUnit_Framework_Error
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testInvalidBcryptCostInvalid() {
 		password_hash('foo', PASSWORD_BCRYPT, array('cost' => 'foo'));
 	}
 
 	/**
-     * @expectedException PHPUnit_Framework_Error
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function testInvalidBcryptSaltShort() {
 		password_hash('foo', PASSWORD_BCRYPT, array('salt' => 'abc'));
