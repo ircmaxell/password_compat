@@ -45,6 +45,9 @@ if (!defined('PASSWORD_BCRYPT')) {
                         return null;
                     }
                 }
+                // The length of salt to generate
+                $raw_salt_len = 17;
+                // The length required in the final serialization
                 $required_salt_len = 22;
                 $hash_format = sprintf("$2y$%02d$", $cost);
                 break;
@@ -80,16 +83,15 @@ if (!defined('PASSWORD_BCRYPT')) {
             }
         } else {
             $buffer = '';
-            $raw_length = (int) ($required_salt_len * 3 / 4 + 1);
             $buffer_valid = false;
             if (function_exists('mcrypt_create_iv') && !defined('PHALANGER')) {
-                $buffer = mcrypt_create_iv($raw_length, MCRYPT_DEV_URANDOM);
+                $buffer = mcrypt_create_iv($raw_salt_len, MCRYPT_DEV_URANDOM);
                 if ($buffer) {
                     $buffer_valid = true;
                 }
             }
             if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
-                $buffer = openssl_random_pseudo_bytes($raw_length);
+                $buffer = openssl_random_pseudo_bytes($raw_salt_len);
                 if ($buffer) {
                     $buffer_valid = true;
                 }
@@ -97,18 +99,18 @@ if (!defined('PASSWORD_BCRYPT')) {
             if (!$buffer_valid && is_readable('/dev/urandom')) {
                 $f = fopen('/dev/urandom', 'r');
                 $read = strlen($buffer);
-                while ($read < $raw_length) {
-                    $buffer .= fread($f, $raw_length - $read);
+                while ($read < $raw_salt_len) {
+                    $buffer .= fread($f, $raw_salt_len - $read);
                     $read = strlen($buffer);
                 }
                 fclose($f);
-                if ($read >= $raw_length) {
+                if ($read >= $raw_salt_len) {
                     $buffer_valid = true;
                 }
             }
-            if (!$buffer_valid || strlen($buffer) < $raw_length) {
+            if (!$buffer_valid || strlen($buffer) < $raw_salt_len) {
                 $bl = strlen($buffer);
-                for ($i = 0; $i < $raw_length; $i++) {
+                for ($i = 0; $i < $raw_salt_len; $i++) {
                     if ($i < $bl) {
                         $buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
                     } else {
