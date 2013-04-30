@@ -46,7 +46,7 @@ if (!defined('PASSWORD_BCRYPT')) {
                     }
                 }
                 // The length of salt to generate
-                $raw_salt_len = 17;
+                $raw_salt_len = 16;
                 // The length required in the final serialization
                 $required_salt_len = 22;
                 $hash_format = sprintf("$2y$%02d$", $cost);
@@ -119,7 +119,6 @@ if (!defined('PASSWORD_BCRYPT')) {
                 }
             }
             $salt = str_replace('+', '.', base64_encode($buffer));
-
         }
         $salt = substr($salt, 0, $required_salt_len);
 
