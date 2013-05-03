@@ -11,7 +11,7 @@ See [the RFC](https://wiki.php.net/rfc/password_hash) for more detailed informat
 Requirements
 ============
 
-This library requires `PHP >= 5.3.7` OR a version that has the `$2y` fix backported into it (such as Debian provides).
+This library requires `PHP >= 5.3.7` OR a version that has the `$2y` fix backported into it (such as RedHat provides). Note that Debian's 5.3.3 version is **NOT** supported.
 
 The runtime checks have been removed due to this version issue. To see if password_compat is available for your system, run the included `version-test.php`. If it outputs "Pass", you can safely use the library. If not, you cannot. 
 
