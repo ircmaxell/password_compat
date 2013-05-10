@@ -7,7 +7,7 @@
  * @copyright 2012 The Authors
  */
 
-if (!defined('PASSWORD_BCRYPT')) {
+if (!defined('PASSWORD_DEFAULT')) {
 
     define('PASSWORD_BCRYPT', 1);
     define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
