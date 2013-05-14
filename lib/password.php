@@ -45,10 +45,10 @@ if (!defined('PASSWORD_DEFAULT')) {
                         return null;
                     }
                 }
-                // The length of salt to generate
-                $raw_salt_len = 16;
                 // The length required in the final serialization
                 $required_salt_len = 22;
+                // The length of salt to generate
+                $raw_salt_len = (int)($required_salt_len * 0.75 + 0.25);
                 $hash_format = sprintf("$2y$%02d$", $cost);
                 break;
             default:
