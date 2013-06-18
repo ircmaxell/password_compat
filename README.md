@@ -39,7 +39,7 @@ Note that the algorithm that we chose is `PASSWORD_BCRYPT`. That's the current s
 
 `BCRYPT` also allows for you to define a `cost` parameter in the options array. This allows for you to change the CPU cost of the algorithm:
 
-    $hash = password_hash($password, PASSWORD_BCRYPT, ["cost" => 10]);
+    $hash = password_hash($password, PASSWORD_BCRYPT, array("cost" => 10));
 
 That's the same as the default. The cost can range from `4` to `31`. I would suggest that you use the highest cost that you can, while keeping response time reasonable (I target between 0.1 and 0.5 seconds for a hash, depending on use-case).
 
