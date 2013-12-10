@@ -75,8 +75,8 @@ if (!defined('PASSWORD_DEFAULT')) {
                     trigger_error('password_hash(): Non-string salt parameter supplied', E_USER_WARNING);
                     return null;
             }
-            if (strlen($salt) < $required_salt_len) {
-                trigger_error(sprintf("password_hash(): Provided salt is too short: %d expecting %d", strlen($salt), $required_salt_len), E_USER_WARNING);
+            if (binary_strlen($salt) < $required_salt_len) {
+                trigger_error(sprintf("password_hash(): Provided salt is too short: %d expecting %d", binary_strlen($salt), $required_salt_len), E_USER_WARNING);
                 return null;
             } elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
                 $salt = str_replace('+', '.', base64_encode($salt));
@@ -98,18 +98,18 @@ if (!defined('PASSWORD_DEFAULT')) {
             }
             if (!$buffer_valid && is_readable('/dev/urandom')) {
                 $f = fopen('/dev/urandom', 'r');
-                $read = strlen($buffer);
+                $read = binary_strlen($buffer);
                 while ($read < $raw_salt_len) {
                     $buffer .= fread($f, $raw_salt_len - $read);
-                    $read = strlen($buffer);
+                    $read = binary_strlen($buffer);
                 }
                 fclose($f);
                 if ($read >= $raw_salt_len) {
                     $buffer_valid = true;
                 }
             }
-            if (!$buffer_valid || strlen($buffer) < $raw_salt_len) {
-                $bl = strlen($buffer);
+            if (!$buffer_valid || binary_strlen($buffer) < $raw_salt_len) {
+                $bl = binary_strlen($buffer);
                 for ($i = 0; $i < $raw_salt_len; $i++) {
                     if ($i < $bl) {
                         $buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
@@ -120,13 +120,13 @@ if (!defined('PASSWORD_DEFAULT')) {
             }
             $salt = str_replace('+', '.', base64_encode($buffer));
         }
-        $salt = substr($salt, 0, $required_salt_len);
+        $salt = binary_substr($salt, 0, $required_salt_len);
 
         $hash = $hash_format . $salt;
 
         $ret = crypt($password, $hash);
 
-        if (!is_string($ret) || strlen($ret) <= 13) {
+        if (!is_string($ret) || binary_strlen($ret) <= 13) {
             return false;
         }
 
@@ -155,7 +155,7 @@ if (!defined('PASSWORD_DEFAULT')) {
             'algoName' => 'unknown',
             'options' => array(),
         );
-        if (substr($hash, 0, 4) == '$2y$' && strlen($hash) == 60) {
+        if (binary_substr($hash, 0, 4) == '$2y$' && binary_strlen($hash) == 60) {
             $return['algo'] = PASSWORD_BCRYPT;
             $return['algoName'] = 'bcrypt';
             list($cost) = sscanf($hash, "$2y$%d$");
@@ -205,18 +205,52 @@ if (!defined('PASSWORD_DEFAULT')) {
             return false;
         }
         $ret = crypt($password, $hash);
-        if (!is_string($ret) || strlen($ret) != strlen($hash) || strlen($ret) <= 13) {
+        if (!is_string($ret) || binary_strlen($ret) != binary_strlen($hash) || binary_strlen($ret) <= 13) {
             return false;
         }
 
         $status = 0;
-        for ($i = 0; $i < strlen($ret); $i++) {
+        for ($i = 0; $i < binary_strlen($ret); $i++) {
             $status |= (ord($ret[$i]) ^ ord($hash[$i]));
         }
 
         return $status === 0;
     }
+
+    /**
+     * Count the number of bytes in a string
+     *
+     * We cannot simply use strlen() for this, because it might be overwritten by the mbstring extension.
+     * In this case, strlen() will count the number of *characters* based on the internal encoding. A
+     * sequence of bytes might be regarded as a single multibyte character.
+     *
+     * @param string $binary_string The input string
+     *
+     * @return int The number of bytes
+     */
+    function binary_strlen($binary_string) {
+           if (extension_loaded('mbstring'))
+               return mb_strlen($binary_string, '8bit');
+           else
+               return strlen($binary_string);
+    }
+
+    /**
+     * Get a substring based on byte limits
+     *
+     * @see binary_strlen()
+     *
+     * @param string $binary_string The input string
+     * @param int    $start
+     * @param int    $length
+     *
+     * @return string The substring
+     */
+    function binary_substr($binary_string, $start, $length) {
+       if (extension_loaded('mbstring'))
+           return mb_substr($binary_string, $start, $length, '8bit');
+       else
+           return substr($binary_string, $start, $length);
+   }
+
 }
-
-
-
