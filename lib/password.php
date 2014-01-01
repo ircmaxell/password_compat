@@ -49,7 +49,11 @@ if (!defined('PASSWORD_DEFAULT')) {
                 $raw_salt_len = 16;
                 // The length required in the final serialization
                 $required_salt_len = 22;
-                $hash_format = sprintf("$2y$%02d$", $cost);
+				if (PHP_VERSION_ID >= 50307) {
+					$hash_format = sprintf("$2y$%02d$", $cost);
+				} else {
+					$hash_format = sprintf("$2a$%02d$", $cost);
+				}
                 break;
             default:
                 trigger_error(sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo), E_USER_WARNING);
