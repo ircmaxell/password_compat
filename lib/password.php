@@ -36,6 +36,7 @@ if (!defined('PASSWORD_DEFAULT')) {
             trigger_error("password_hash() expects parameter 2 to be long, " . gettype($algo) . " given", E_USER_WARNING);
             return null;
         }
+        $resultLength = 0;
         switch ($algo) {
             case PASSWORD_BCRYPT:
                 // Note that this is a C constant, but not exposed to PHP, so we don't define it here.
@@ -52,6 +53,8 @@ if (!defined('PASSWORD_DEFAULT')) {
                 // The length required in the final serialization
                 $required_salt_len = 22;
                 $hash_format = sprintf("$2y$%02d$", $cost);
+                // The expected length of the final crypt() output
+                $resultLength = 60;
                 break;
             default:
                 trigger_error(sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo), E_USER_WARNING);
@@ -140,7 +143,7 @@ if (!defined('PASSWORD_DEFAULT')) {
 
         $ret = crypt($password, $hash);
 
-        if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) <= 13) {
+        if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) != $resultLength) {
             return false;
         }
 
