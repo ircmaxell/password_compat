@@ -6,4 +6,7 @@ php:
   - 5.3
   - hhvm
 
+before_script:
+  - composer install --dev
+
 script: vendor/bin/phpunit --configuration phpunit.xml.dist
