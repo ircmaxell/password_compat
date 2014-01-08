@@ -57,6 +57,7 @@ if (!defined('PASSWORD_DEFAULT')) {
                 trigger_error(sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo), E_USER_WARNING);
                 return null;
         }
+        $salt_requires_encoding = false;
         if (isset($options['salt'])) {
             switch (gettype($options['salt'])) {
                 case 'NULL':
@@ -81,7 +82,7 @@ if (!defined('PASSWORD_DEFAULT')) {
                 trigger_error(sprintf("password_hash(): Provided salt is too short: %d expecting %d", PasswordCompat\binary\_strlen($salt), $required_salt_len), E_USER_WARNING);
                 return null;
             } elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
-                $salt = str_replace('+', '.', base64_encode($salt));
+                $salt_requires_encoding = true;
             }
         } else {
             $buffer = '';
@@ -120,7 +121,18 @@ if (!defined('PASSWORD_DEFAULT')) {
                     }
                 }
             }
-            $salt = str_replace('+', '.', base64_encode($buffer));
+            $salt = $buffer;
+            $salt_requires_encoding = true;
+        }
+        if ($salt_requires_encoding) {
+            // encode string with the Base64 variant used by crypt
+            $base64_digits =
+                'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+            $bcrypt64_digits =
+                './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+            $base64_string = base64_encode($salt);
+            $salt = strtr(rtrim($base64_string, '='), $base64_digits, $bcrypt64_digits);
         }
         $salt = PasswordCompat\binary\_substr($salt, 0, $required_salt_len);
 
