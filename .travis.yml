@@ -6,4 +6,4 @@ php:
   - 5.3
   - hhvm
 
-script: phpunit --configuration phpunit.xml.dist
+script: vendor/bin/phpunit --configuration phpunit.xml.dist
