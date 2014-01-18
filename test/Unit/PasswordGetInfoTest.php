@@ -1,7 +1,7 @@
 <?php
 
 class PasswordGetInfoTest extends PHPUnit_Framework_TestCase {
-    
+
     public static function provideInfo() {
         return array(
             array('foo', array('algo' => 0, 'algoName' => 'unknown', 'options' => array())),
