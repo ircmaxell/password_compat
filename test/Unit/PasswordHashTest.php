@@ -1,7 +1,7 @@
 <?php
 
 class PasswordHashTest extends PHPUnit_Framework_TestCase {
-    
+
     public function testFuncExists() {
         $this->assertTrue(function_exists('password_hash'));
     }
@@ -63,7 +63,7 @@ class PasswordHashTest extends PHPUnit_Framework_TestCase {
     public function testInvalidBcryptCostLow() {
         password_hash('foo', PASSWORD_BCRYPT, array('cost' => 3));
     }
-        
+
     /**
      * @expectedException PHPUnit_Framework_Error
      */

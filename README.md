@@ -13,7 +13,7 @@ Requirements
 
 This library requires `PHP >= 5.3.7` OR a version that has the `$2y` fix backported into it (such as RedHat provides). Note that Debian's 5.3.3 version is **NOT** supported.
 
-The runtime checks have been removed due to this version issue. To see if password_compat is available for your system, run the included `version-test.php`. If it outputs "Pass", you can safely use the library. If not, you cannot. 
+The runtime checks have been removed due to this version issue. To see if password_compat is available for your system, run the included `version-test.php`. If it outputs "Pass", you can safely use the library. If not, you cannot.
 
 If you attempt to use password-compat on an unsupported version, attempts to create or verify hashes will return `false`. You have been warned!
 
@@ -22,7 +22,7 @@ The reason for this is that PHP prior to 5.3.7 contains a [security issue with i
 Installation
 ============
 
-To install, simply `require` the `password.php` file under `lib`. 
+To install, simply `require` the `password.php` file under `lib`.
 
 You can also install it via `Composer` by using the [Packagist archive](http://packagist.org/packages/ircmaxell/password-compat).
 
@@ -55,11 +55,11 @@ It is very important that you should check the return value of `password_hash` p
 
 To verify a hash created by `password_hash`, simply call:
 
-	if (password_verify($password, $hash)) {
-		/* Valid */
-	} else {
-		/* Invalid */
-	}
+    if (password_verify($password, $hash)) {
+        /* Valid */
+    } else {
+        /* Invalid */
+    }
 
 That's all there is to it.
 
@@ -68,8 +68,8 @@ That's all there is to it.
 From time to time you may update your hashing parameters (algorithm, cost, etc). So a function to determine if rehashing is necessary is available:
 
     if (password_verify($password, $hash)) {
-		if (password_needs_rehash($hash, $algorithm, $options)) {
-			$hash = password_hash($password, $algorithm, $options);
-			/* Store new hash in db */
-		}
-	}
+        if (password_needs_rehash($hash, $algorithm, $options)) {
+            $hash = password_hash($password, $algorithm, $options);
+            /* Store new hash in db */
+        }
+    }
