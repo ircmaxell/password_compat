@@ -32,21 +32,21 @@ Usage
 **Creating Password Hashes**
 
 To create a password hash from a password, simply use the `password_hash` function.
-
+````PHP
     $hash = password_hash($password, PASSWORD_BCRYPT);
-
+````
 Note that the algorithm that we chose is `PASSWORD_BCRYPT`. That's the current strongest algorithm supported. This is the `BCRYPT` crypt algorithm. It produces a 60 character hash as the result.
 
 `BCRYPT` also allows for you to define a `cost` parameter in the options array. This allows for you to change the CPU cost of the algorithm:
-
+````PHP
     $hash = password_hash($password, PASSWORD_BCRYPT, array("cost" => 10));
-
+````
 That's the same as the default. The cost can range from `4` to `31`. I would suggest that you use the highest cost that you can, while keeping response time reasonable (I target between 0.1 and 0.5 seconds for a hash, depending on use-case).
 
 Another algorithm name is supported:
-
+````PHP
     PASSWORD_DEFAULT
-
+````
 This will use the strongest algorithm available to PHP at the current time. Presently, this is the same as specifying `PASSWORD_BCRYPT`. But in future versions of PHP, it may be updated to use a stronger algorithm if one is introduced. It can also be changed if a problem is identified with the BCRYPT algorithm. Note that if you use this option, you are **strongly** encouraged to store it in a `VARCHAR(255)` column to avoid truncation issues if a future algorithm increases the length of the generated hash.
 
 It is very important that you should check the return value of `password_hash` prior to storing it, because a `false` may be returned if it encountered an error.
@@ -54,22 +54,23 @@ It is very important that you should check the return value of `password_hash` p
 **Verifying Password Hashes**
 
 To verify a hash created by `password_hash`, simply call:
-
+````PHP
 	if (password_verify($password, $hash)) {
 		/* Valid */
 	} else {
 		/* Invalid */
 	}
-
+````
 That's all there is to it.
 
 **Rehashing Passwords**
 
 From time to time you may update your hashing parameters (algorithm, cost, etc). So a function to determine if rehashing is necessary is available:
-
+````PHP
     if (password_verify($password, $hash)) {
 		if (password_needs_rehash($hash, $algorithm, $options)) {
 			$hash = password_hash($password, $algorithm, $options);
 			/* Store new hash in db */
 		}
 	}
+````
