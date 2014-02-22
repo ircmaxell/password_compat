@@ -84,7 +84,7 @@ if (!defined('PASSWORD_DEFAULT')) {
             if (PasswordCompat\binary\_strlen($salt) < $required_salt_len) {
                 trigger_error(sprintf("password_hash(): Provided salt is too short: %d expecting %d", PasswordCompat\binary\_strlen($salt), $required_salt_len), E_USER_WARNING);
                 return null;
-            } elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
+            } elseif (1 !== preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
                 $salt_requires_encoding = true;
             }
         } else {
@@ -143,7 +143,7 @@ if (!defined('PASSWORD_DEFAULT')) {
 
         $ret = crypt($password, $hash);
 
-        if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) != $resultLength) {
+        if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) !== $resultLength) {
             return false;
         }
 
@@ -172,7 +172,7 @@ if (!defined('PASSWORD_DEFAULT')) {
             'algoName' => 'unknown',
             'options' => array(),
         );
-        if (PasswordCompat\binary\_substr($hash, 0, 4) == '$2y$' && PasswordCompat\binary\_strlen($hash) == 60) {
+        if (PasswordCompat\binary\_substr($hash, 0, 4) === '$2y$' && PasswordCompat\binary\_strlen($hash) === 60) {
             $return['algo'] = PASSWORD_BCRYPT;
             $return['algoName'] = 'bcrypt';
             list($cost) = sscanf($hash, "$2y$%d$");
@@ -194,13 +194,13 @@ if (!defined('PASSWORD_DEFAULT')) {
      */
     function password_needs_rehash($hash, $algo, array $options = array()) {
         $info = password_get_info($hash);
-        if ($info['algo'] != $algo) {
+        if ($info['algo'] !== $algo) {
             return true;
         }
         switch ($algo) {
             case PASSWORD_BCRYPT:
                 $cost = isset($options['cost']) ? $options['cost'] : 10;
-                if ($cost != $info['options']['cost']) {
+                if ($cost !== $info['options']['cost']) {
                     return true;
                 }
                 break;
@@ -222,7 +222,7 @@ if (!defined('PASSWORD_DEFAULT')) {
             return false;
         }
         $ret = crypt($password, $hash);
-        if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) != PasswordCompat\binary\_strlen($hash) || PasswordCompat\binary\_strlen($ret) <= 13) {
+        if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) !== PasswordCompat\binary\_strlen($hash) || PasswordCompat\binary\_strlen($ret) <= 13) {
             return false;
         }
 
