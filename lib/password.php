@@ -274,6 +274,25 @@ namespace PasswordCompat\binary {
            return mb_substr($binary_string, $start, $length, '8bit');
        }
        return substr($binary_string, $start, $length);
-   }
+    }
 
+    /**
+     * Check if current PHP version is compatible with the library
+     *
+     * @return boolean the check result
+     */
+    function check() {
+        static $pass = NULL;
+
+        if (is_null($pass)) {
+            if (function_exists('crypt')) {
+                $hash = '$2y$04$usesomesillystringfore7hnbRJHxXVLeakoG8K30oukPsA.ztMG';
+                $test = crypt("password", $hash);
+                $pass = $test == $hash;
+            } else {
+                $pass = false;
+            }
+        }
+        return $pass;
+    }
 }
