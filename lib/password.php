@@ -222,16 +222,61 @@ if (!defined('PASSWORD_DEFAULT')) {
             return false;
         }
         $ret = crypt($password, $hash);
-        if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) != PasswordCompat\binary\_strlen($hash) || PasswordCompat\binary\_strlen($ret) <= 13) {
-            return false;
+        return hash_equals($hash, $ret);
+    }
+
+}
+
+if (!function_exists('hash_equals')) {
+
+    /**
+     * Timing attack safe string comparison
+     *
+     * @param string $known_string The string of known length to compare against
+     * @param string $user_string  The user-supplied hash
+     *
+     * @return boolean or null
+     */
+    function hash_equals($known_string, $user_string) {
+        $eq = true;
+
+        $argc = func_num_args();
+        
+        if ($argc < 2) {
+            trigger_error("hash_equals() expects at least 2 parameters, {$argc} given", E_USER_WARNING);
+            return null;
+        }
+        
+        if (!is_string($known_string)) {
+            trigger_error("hash_equals(): Expected known_string to be a string, " . gettype($known_string) . " given", E_USER_WARNING);
+            $eq = false;
         }
 
-        $status = 0;
-        for ($i = 0; $i < PasswordCompat\binary\_strlen($ret); $i++) {
-            $status |= (ord($ret[$i]) ^ ord($hash[$i]));
+        if (!is_string($user_string)) {
+            trigger_error("hash_equals(): Expected user_string to be a string, " . gettype($user_string) . " given", E_USER_WARNING);
+            $eq = false;
         }
 
-        return $status === 0;
+        if (!is_string($known_string) || !is_string($user_string)) {
+            $eq = false;
+        }
+
+        $known_len = PasswordCompat\binary\_strlen($known_string);
+        $user_len = PasswordCompat\binary\_strlen($user_string);
+
+        if ($known_len != $user_len) {
+            $eq = false;
+        }
+
+        for ($i = 0; $i < $known_len; $i++) {
+            if ($known_len > $i && $user_len > $i) {
+                if ($known_string[$i] !== $user_string[$i]) {
+                    $eq = false;
+                }
+            }
+        }
+
+        return $eq;
     }
 }
 
