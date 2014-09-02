@@ -222,6 +222,10 @@ if (!defined('PASSWORD_DEFAULT')) {
             return false;
         }
         $ret = crypt($password, $hash);
+        if (!is_string($hash) || !is_string($ret)) {
+            return false;
+        }
+
         return hash_equals($hash, $ret);
     }
 
