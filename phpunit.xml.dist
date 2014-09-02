@@ -13,7 +13,7 @@
          stopOnFailure="false"
          stopOnIncomplete="false"
          stopOnSkipped="false"
-         testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
+         testSuiteLoaderFile="vendor/phpunit/phpunit/src/Runner/StandardTestSuiteLoader.php"
          strict="false"
          verbose="false">
     <testsuites>
