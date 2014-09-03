@@ -222,7 +222,7 @@ if (!defined('PASSWORD_DEFAULT')) {
             return false;
         }
         $ret = crypt($password, $hash);
-        if (!is_string($hash) || !is_string($ret)) {
+        if (!is_string($hash) || !is_string($ret) || PasswordCompat\binary\_strlen($ret) <= 13) {
             return false;
         }
 
@@ -242,9 +242,9 @@ if (!function_exists('hash_equals')) {
      * @return boolean or null
      */
     function hash_equals($known_string, $user_string) {
-        $eq = true;
-
         $argc = func_num_args();
+        $eq = true;
+        $result = 0;
         
         if ($argc < 2) {
             trigger_error("hash_equals() expects at least 2 parameters, {$argc} given", E_USER_WARNING);
@@ -274,10 +274,12 @@ if (!function_exists('hash_equals')) {
 
         for ($i = 0; $i < $known_len; $i++) {
             if ($known_len > $i && $user_len > $i) {
-                if ($known_string[$i] !== $user_string[$i]) {
-                    $eq = false;
-                }
+                $result |= ord($known_string[$i]) ^ ord($user_string[$i]);
             }
+        }
+
+        if ($result !== 0) {
+            $eq = false;
         }
 
         return $eq;
