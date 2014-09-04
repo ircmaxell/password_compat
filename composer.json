@@ -12,6 +12,9 @@
 			"homepage": "http://blog.ircmaxell.com"
 		}
 	],
+    "require": {
+	"php": ">=5.3.7",
+    },
     "require-dev": {
         "phpunit/phpunit": "4.*"
     },
