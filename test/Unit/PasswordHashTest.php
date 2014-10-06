@@ -5,6 +5,13 @@ class PasswordHashTest extends PHPUnit_Framework_TestCase {
     public function testFuncExists() {
         $this->assertTrue(function_exists('password_hash'));
     }
+    
+    /**
+     * @runInSeparateProcess
+     */
+    public function testFuncExistsSeparateProc() {
+        $this->assertTrue(function_exists('password_hash'));
+    }
 
     public function testStringLength() {
         $this->assertEquals(60, strlen(password_hash('foo', PASSWORD_BCRYPT)));

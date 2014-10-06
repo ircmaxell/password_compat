@@ -15,6 +15,13 @@ class PasswordNeedsRehashTest extends PHPUnit_Framework_TestCase {
     public function testFuncExists() {
         $this->assertTrue(function_exists('password_needs_rehash'));
     }
+    
+    /**
+     * @runInSeparateProcess
+     */
+    public function testFuncExistsSeparateProc() {
+        $this->assertTrue(function_exists('password_needs_rehash'));
+    }
 
     /**
      * @dataProvider provideCases
