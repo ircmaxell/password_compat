@@ -15,6 +15,13 @@ class PasswordGetInfoTest extends PHPUnit_Framework_TestCase {
     public function testFuncExists() {
         $this->assertTrue(function_exists('password_get_info'));
     }
+    
+    /**
+     * @runInSeparateProcess
+     */
+    public function testFuncExistsSeparateProc() {
+        $this->assertTrue(function_exists('password_get_info'));
+    }
 
     /**
      * @dataProvider provideInfo

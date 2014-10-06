@@ -13,6 +13,9 @@ if (!defined('PASSWORD_DEFAULT')) {
 
     define('PASSWORD_BCRYPT', 1);
     define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
+}
+
+if (!function_exists('password_hash')) {
 
     /**
      * Hash the password using the specified algorithm
@@ -149,6 +152,9 @@ if (!defined('PASSWORD_DEFAULT')) {
 
         return $ret;
     }
+}
+
+if (!function_exists('password_get_info')) {
 
     /**
      * Get information about the password hash. Returns an array of the information
@@ -180,6 +186,9 @@ if (!defined('PASSWORD_DEFAULT')) {
         }
         return $return;
     }
+}
+
+if (!function_exists('password_needs_rehash')) {
 
     /**
      * Determine if the password hash needs to be rehashed according to the options provided
@@ -207,6 +216,9 @@ if (!defined('PASSWORD_DEFAULT')) {
         }
         return false;
     }
+}
+
+if (!function_exists('password_verify')) {
 
     /**
      * Verify a password against a hash using a timing attack resistant approach
