@@ -23,7 +23,7 @@ if (!defined('PASSWORD_DEFAULT')) {
      *
      * @return string|false The hashed password, or false on error.
      */
-    function password_hash($password, $algo, array $options = array()) {
+    function password_hash($password, $algo = PASSWORD_DEFAULT, array $options = array()) {
         if (!function_exists('crypt')) {
             trigger_error("Crypt must be loaded for password_hash to function", E_USER_WARNING);
             return null;
