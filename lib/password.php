@@ -238,6 +238,8 @@ if (!defined('PASSWORD_DEFAULT')) {
 }
 
 namespace PasswordCompat\binary {
+
+if (!defined('PASSWORD_DEFAULT')) {
     /**
      * Count the number of bytes in a string
      *
@@ -275,5 +277,7 @@ namespace PasswordCompat\binary {
        }
        return substr($binary_string, $start, $length);
    }
+
+}
 
 }
