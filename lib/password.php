@@ -12,6 +12,7 @@ namespace {
 if (!defined('PASSWORD_DEFAULT')) {
 
     define('PASSWORD_BCRYPT', 1);
+    define('PASSWORD_BCRYPT_DEFAULT_COST', 10);
     define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
 
     /**
@@ -39,8 +40,7 @@ if (!defined('PASSWORD_DEFAULT')) {
         $resultLength = 0;
         switch ($algo) {
             case PASSWORD_BCRYPT:
-                // Note that this is a C constant, but not exposed to PHP, so we don't define it here.
-                $cost = 10;
+                $cost = PASSWORD_BCRYPT_DEFAULT_COST;
                 if (isset($options['cost'])) {
                     $cost = $options['cost'];
                     if ($cost < 4 || $cost > 31) {
@@ -158,7 +158,7 @@ if (!defined('PASSWORD_DEFAULT')) {
      *    'algo' => 1,
      *    'algoName' => 'bcrypt',
      *    'options' => array(
-     *        'cost' => 10,
+     *        'cost' => PASSWORD_BCRYPT_DEFAULT_COST,
      *    ),
      * )
      *
@@ -199,7 +199,7 @@ if (!defined('PASSWORD_DEFAULT')) {
         }
         switch ($algo) {
             case PASSWORD_BCRYPT:
-                $cost = isset($options['cost']) ? $options['cost'] : 10;
+                $cost = isset($options['cost']) ? $options['cost'] : PASSWORD_BCRYPT_DEFAULT_COST;
                 if ($cost != $info['options']['cost']) {
                     return true;
                 }
