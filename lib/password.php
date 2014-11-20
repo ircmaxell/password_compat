@@ -12,6 +12,7 @@ namespace {
 if (!defined('PASSWORD_DEFAULT')) {
 
     define('PASSWORD_BCRYPT', 1);
+    define('PASSWORD_SHA512', 2);
     define('PASSWORD_DEFAULT', PASSWORD_BCRYPT);
 
     /**
@@ -55,6 +56,24 @@ if (!defined('PASSWORD_DEFAULT')) {
                 $hash_format = sprintf("$2y$%02d$", $cost);
                 // The expected length of the final crypt() output
                 $resultLength = 60;
+                break;
+            case PASSWORD_SHA512:
+                // Note that this is a C constant, but not exposed to PHP, so we don't define it here.
+                $rounds = 5000;
+                if (isset($options['rounds'])) {
+                    $rounds = $options['rounds'];
+                    if ($rounds < 1000 || $rounds > 999999999) {
+                        trigger_error(sprintf("password_hash(): Invalid sha512 rounds parameter specified: %d", $rounds), E_USER_WARNING);
+                        return null;
+                    }
+                }
+                // The length of salt to generate
+                $raw_salt_len = 16;
+                // The length required in the final serialization
+                $required_salt_len = 22;
+                $hash_format = sprintf('$6$rounds=%d$', $rounds);
+                // The expected length of the final crypt() output
+                $resultLength = strlen($hash_format) + $raw_salt_len + 87;
                 break;
             default:
                 trigger_error(sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo), E_USER_WARNING);
@@ -177,6 +196,11 @@ if (!defined('PASSWORD_DEFAULT')) {
             $return['algoName'] = 'bcrypt';
             list($cost) = sscanf($hash, "$2y$%d$");
             $return['options']['cost'] = $cost;
+        } else if (PasswordCompat\binary\_substr($hash, 0, 3) == '$6$') {
+            $return['algo'] = PASSWORD_SHA512;
+            $return['algoName'] = 'sha512';
+            list($rounds) = sscanf($hash, '$6$rounds=%d$');
+            $return['options']['rounds'] = $rounds;
         }
         return $return;
     }
@@ -201,6 +225,12 @@ if (!defined('PASSWORD_DEFAULT')) {
             case PASSWORD_BCRYPT:
                 $cost = isset($options['cost']) ? $options['cost'] : 10;
                 if ($cost != $info['options']['cost']) {
+                    return true;
+                }
+                break;
+            case PASSWORD_SHA512:
+                $rounds = isset($options['rounds']) ? $options['rounds'] : 5000;
+                if ($rounds != $info['options']['rounds']) {
                     return true;
                 }
                 break;
