@@ -73,7 +73,7 @@ if (!defined('PASSWORD_DEFAULT')) {
                 $required_salt_len = 22;
                 $hash_format = sprintf('$6$rounds=%d$', $rounds);
                 // The expected length of the final crypt() output
-                $resultLength = strlen($hash_format) + $raw_salt_len + 86;
+                $resultLength = strlen($hash_format) + $raw_salt_len + 87;
                 break;
             default:
                 trigger_error(sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo), E_USER_WARNING);
