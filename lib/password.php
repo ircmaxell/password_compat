@@ -265,10 +265,10 @@ namespace PasswordCompat\binary {
          * @return int The number of bytes
          */
         function _strlen($binary_string) {
-               if (function_exists('mb_strlen')) {
-                   return mb_strlen($binary_string, '8bit');
-               }
-               return strlen($binary_string);
+            if (function_exists('mb_strlen')) {
+                return mb_strlen($binary_string, '8bit');
+            }
+            return strlen($binary_string);
         }
 
         /**
@@ -284,10 +284,10 @@ namespace PasswordCompat\binary {
          * @return string The substring
          */
         function _substr($binary_string, $start, $length) {
-           if (function_exists('mb_substr')) {
-               return mb_substr($binary_string, $start, $length, '8bit');
-           }
-           return substr($binary_string, $start, $length);
+            if (function_exists('mb_substr')) {
+                return mb_substr($binary_string, $start, $length, '8bit');
+            }
+            return substr($binary_string, $start, $length);
         }
 
         /**
