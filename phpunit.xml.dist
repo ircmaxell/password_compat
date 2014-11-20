@@ -2,28 +2,30 @@
 <phpunit backupGlobals="true"
          backupStaticAttributes="false"
          bootstrap="lib/password.php"
-         colors="false"
+         colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         forceCoversAnnotation="false"
-         mapTestClassNameToCoveredClassName="false"
          processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
-         stopOnIncomplete="false"
-         stopOnSkipped="false"
-         testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
-         strict="false"
-         verbose="false">
+         syntaxCheck="true"
+         strict="true"
+         verbose="true"
+>
     <testsuites>
         <testsuite name="Unit">
             <directory>test/Unit</directory>
         </testsuite>
     </testsuites>
+    <testsuites>
+        <testsuite name="Password Compat Test Suite">
+            <directory suffix="Test.php">./test</directory>
+        </testsuite>
+    </testsuites>
     <filter>
-        <whitelist>
-            <directory suffix=".php">lib/</directory>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./lib</directory>
         </whitelist>
     </filter>
 </phpunit>
