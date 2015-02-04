@@ -74,3 +74,8 @@ From time to time you may update your hashing parameters (algorithm, cost, etc).
 		}
 	}
 ````
+
+Security Vulnerabilities
+========================
+
+If you have found a security issue, please contact the author directly at [ircmaxell@php.net](mailto:ircmaxell@php.net).
