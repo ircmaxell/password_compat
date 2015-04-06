@@ -53,7 +53,7 @@ namespace {
                 case PASSWORD_BCRYPT:
                     $cost = PASSWORD_BCRYPT_DEFAULT_COST;
                     if (isset($options['cost'])) {
-                        $cost = $options['cost'];
+                        $cost = (int) $options['cost'];
                         if ($cost < 4 || $cost > 31) {
                             trigger_error(sprintf("password_hash(): Invalid bcrypt cost parameter specified: %d", $cost), E_USER_WARNING);
                             return null;
@@ -205,13 +205,13 @@ namespace {
          */
         function password_needs_rehash($hash, $algo, array $options = array()) {
             $info = password_get_info($hash);
-            if ($info['algo'] != $algo) {
+            if ($info['algo'] !== (int) $algo) {
                 return true;
             }
             switch ($algo) {
                 case PASSWORD_BCRYPT:
-                    $cost = isset($options['cost']) ? $options['cost'] : PASSWORD_BCRYPT_DEFAULT_COST;
-                    if ($cost != $info['options']['cost']) {
+                    $cost = isset($options['cost']) ? (int) $options['cost'] : PASSWORD_BCRYPT_DEFAULT_COST;
+                    if ($cost !== $info['options']['cost']) {
                         return true;
                     }
                     break;
