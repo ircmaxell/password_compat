@@ -3,7 +3,7 @@ password_compat
 
 [![Build Status](https://travis-ci.org/ircmaxell/password_compat.png?branch=master)](https://travis-ci.org/ircmaxell/password_compat) [![Code Climate](https://codeclimate.com/github/ircmaxell/password_compat/badges/gpa.svg)](https://codeclimate.com/github/ircmaxell/password_compat)
 
-This library is intended to provide forward compatibility with the [password_*](http://php.net/password) functions being worked on for PHP 5.5.
+This library is intended to provide forward compatibility with the [password_*](http://php.net/password) functions that ship with PHP 5.5.
 
 See [the RFC](https://wiki.php.net/rfc/password_hash) for more detailed information.
 
