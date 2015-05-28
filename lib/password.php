@@ -114,25 +114,20 @@ namespace {
                     }
                 }
                 if (!$buffer_valid && @is_readable('/dev/urandom')) {
+                    $buffer = '';
+                    $read = 0;
                     $file = fopen('/dev/urandom', 'r');
-                    $read = PasswordCompat\binary\_strlen($buffer);
                     while ($read < $raw_salt_len) {
                         $buffer .= fread($file, $raw_salt_len - $read);
                         $read = PasswordCompat\binary\_strlen($buffer);
                     }
                     fclose($file);
-                    if ($read >= $raw_salt_len) {
-                        $buffer_valid = true;
-                    }
+                    $buffer_valid = true;
                 }
-                if (!$buffer_valid || PasswordCompat\binary\_strlen($buffer) < $raw_salt_len) {
-                    $buffer_length = PasswordCompat\binary\_strlen($buffer);
+                if (!$buffer_valid) {
+                    $buffer = '';
                     for ($i = 0; $i < $raw_salt_len; $i++) {
-                        if ($i < $buffer_length) {
-                            $buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
-                        } else {
-                            $buffer .= chr(mt_rand(0, 255));
-                        }
+                        $buffer .= chr(mt_rand(0, 255));
                     }
                 }
                 $salt = $buffer;
@@ -233,12 +228,13 @@ namespace {
                 return false;
             }
             $ret = crypt($password, $hash);
-            if (!is_string($ret) || PasswordCompat\binary\_strlen($ret) != PasswordCompat\binary\_strlen($hash) || PasswordCompat\binary\_strlen($ret) <= 13) {
+            $l_ret = PasswordCompat\binary\_strlen($ret);
+            if (!is_string($ret) || ($l_ret != PasswordCompat\binary\_strlen($hash)) || ($l_ret <= 13)) {
                 return false;
             }
 
             $status = 0;
-            for ($i = 0; $i < PasswordCompat\binary\_strlen($ret); $i++) {
+            for ($i = 0; $i < $l_ret; $i++) {
                 $status |= (ord($ret[$i]) ^ ord($hash[$i]));
             }
 
