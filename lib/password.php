@@ -108,22 +108,25 @@ namespace {
                     }
                 }
                 if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
-                    $buffer = openssl_random_pseudo_bytes($raw_salt_len);
-                    if ($buffer) {
+                    $strong = false;
+                    $buffer = openssl_random_pseudo_bytes($raw_salt_len, $strong);
+                    if ($buffer && $strong) {
                         $buffer_valid = true;
                     }
                 }
                 if (!$buffer_valid && @is_readable('/dev/urandom')) {
                     $file = fopen('/dev/urandom', 'r');
-                    $read = PasswordCompat\binary\_strlen($buffer);
+                    $read = 0;
+                    $local_buffer = '';
                     while ($read < $raw_salt_len) {
-                        $buffer .= fread($file, $raw_salt_len - $read);
-                        $read = PasswordCompat\binary\_strlen($buffer);
+                        $local_buffer .= fread($file, $raw_salt_len - $read);
+                        $read = PasswordCompat\binary\_strlen($local_buffer);
                     }
                     fclose($file);
                     if ($read >= $raw_salt_len) {
                         $buffer_valid = true;
                     }
+                    $buffer = str_pad($buffer, $raw_salt_len, "\0") ^ str_pad($local_buffer, $raw_salt_len, "\0");
                 }
                 if (!$buffer_valid || PasswordCompat\binary\_strlen($buffer) < $raw_salt_len) {
                     $buffer_length = PasswordCompat\binary\_strlen($buffer);
