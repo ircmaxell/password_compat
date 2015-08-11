@@ -34,7 +34,7 @@ namespace {
          */
         function password_hash($password, $algo, array $options = array()) {
             if (!function_exists('crypt')) {
-                trigger_error("Crypt must be loaded for password_hash to function", E_USER_WARNING);
+                trigger_error("Crypt must be loaded for password_hash to function", E_USER_ERROR);
                 return null;
             }
             if (is_null($password) || is_int($password)) {
@@ -232,7 +232,7 @@ namespace {
          */
         function password_verify($password, $hash) {
             if (!function_exists('crypt')) {
-                trigger_error("Crypt must be loaded for password_verify to function", E_USER_WARNING);
+                trigger_error("Crypt must be loaded for password_verify to function", E_USER_ERROR);
                 return false;
             }
             $ret = crypt($password, $hash);
