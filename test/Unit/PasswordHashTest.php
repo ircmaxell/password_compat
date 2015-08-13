@@ -95,11 +95,12 @@ class PasswordHashTest extends PHPUnit_Framework_TestCase {
         password_hash('foo', PASSWORD_BCRYPT, array('salt' => 'abc'));
     }
 
-	/**
-     * @expectedException PHPUnit_Framework_Error
-	 */
-    public function testManualSalt() {
+    public function testDeprecatedSalt() {
+        if (version_compare(PHP_VERSION, '5.5.0', '>=') && version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $this->markTestSkipped();
+        }
+        $this->setExpectedException("PHPUnit_Framework_Error");
         password_hash("rasmuslerdorf", PASSWORD_BCRYPT, array("cost" => 7, "salt" => "usesomesillystringforsalt"));
-	}
+    }
 
 }
