@@ -98,6 +98,7 @@ namespace {
                 } elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
                     $salt_req_encoding = true;
                 }
+                trigger_error("password_hash(): Use of the 'salt' option to password_hash is deprecated", E_USER_DEPRECATED);
             } else {
                 $buffer = '';
                 $buffer_valid = false;
