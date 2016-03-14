@@ -9,6 +9,8 @@
 
 namespace {
 
+    use \ParagonIE\ConstantTime\Base64DotSlash;
+
     if (!defined('PASSWORD_BCRYPT')) {
         /**
          * PHPUnit Process isolation caches constants, but not function declarations.
@@ -95,7 +97,7 @@ namespace {
                 if (PasswordCompat\binary\_strlen($salt) < $required_salt_len) {
                     trigger_error(sprintf("password_hash(): Provided salt is too short: %d expecting %d", PasswordCompat\binary\_strlen($salt), $required_salt_len), E_USER_WARNING);
                     return null;
-                } elseif (0 == preg_match('#^[a-zA-Z0-9./]+$#D', $salt)) {
+                } elseif (0 === preg_match('#^[a-zA-Z0-9\\./]+$#D', $salt)) {
                     $salt_req_encoding = true;
                 }
             } else {
@@ -103,6 +105,12 @@ namespace {
                 $buffer_valid = false;
                 if (function_exists('mcrypt_create_iv') && !defined('PHALANGER')) {
                     $buffer = mcrypt_create_iv($raw_salt_len, MCRYPT_DEV_URANDOM);
+                    if ($buffer) {
+                        $buffer_valid = true;
+                    }
+                }
+                if (!$buffer_valid && function_exists('random_bytes')) {
+                    $buffer = random_bytes($raw_salt_len);
                     if ($buffer) {
                         $buffer_valid = true;
                     }
@@ -132,9 +140,9 @@ namespace {
                     $buffer_length = PasswordCompat\binary\_strlen($buffer);
                     for ($i = 0; $i < $raw_salt_len; $i++) {
                         if ($i < $buffer_length) {
-                            $buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
+                            $buffer[$i] = $buffer[$i] ^ pack('C', mt_rand(0, 255));
                         } else {
-                            $buffer .= chr(mt_rand(0, 255));
+                            $buffer .= pack('C', mt_rand(0, 255));
                         }
                     }
                 }
@@ -142,14 +150,7 @@ namespace {
                 $salt_req_encoding = true;
             }
             if ($salt_req_encoding) {
-                // encode string with the Base64 variant used by crypt
-                $base64_digits =
-                    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-                $bcrypt64_digits =
-                    './ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-                $base64_string = base64_encode($salt);
-                $salt = strtr(rtrim($base64_string, '='), $base64_digits, $bcrypt64_digits);
+                $salt = Base64DotSlash::encode($salt);
             }
             $salt = PasswordCompat\binary\_substr($salt, 0, $required_salt_len);
 
