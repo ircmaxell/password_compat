@@ -1,7 +1,7 @@
 <?php
 
 class PasswordVerifyTest extends PHPUnit_Framework_TestCase {
-    
+
     public function testFuncExists() {
         $this->assertTrue(function_exists('password_verify'));
     }
@@ -24,6 +24,10 @@ class PasswordVerifyTest extends PHPUnit_Framework_TestCase {
 
     public function testInValidHash() {
         $this->assertFalse(password_verify('rasmuslerdorf', '$2a$07$usesomesillystringfore2uDLvp1Ii2e./U9C8sBjqp8I90dH6hj'));
+    }
+
+    public function testDesHashesAreAccepted() {
+        $this->assertTrue(password_verify('rasmuslerdorf', crypt('rasmuslerdorf', 'AB')));
     }
 
 }
