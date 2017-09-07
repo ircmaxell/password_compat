@@ -49,7 +49,7 @@ Another algorithm name is supported:
 ````
 This will use the strongest algorithm available to PHP at the current time. Presently, this is the same as specifying `PASSWORD_BCRYPT`. But in future versions of PHP, it may be updated to use a stronger algorithm if one is introduced. It can also be changed if a problem is identified with the BCRYPT algorithm. Note that if you use this option, you are **strongly** encouraged to store it in a `VARCHAR(255)` column to avoid truncation issues if a future algorithm increases the length of the generated hash.
 
-It is very important that you check the return value of `password_hash` prior to storing it, because `false` or `null` may be returned if it encountered an error.
+It is very important that you check the return value of `password_hash` prior to storing it, because `false` or `null` may be returned if it encounters any errors.
 
 **Verifying Password Hashes**
 
