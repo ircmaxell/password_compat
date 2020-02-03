@@ -6,8 +6,6 @@ php:
   - 5.4
   - 5.5
   - 5.6
-  - hhvm
-    dist: trusty
 
 install:
   - travis_retry composer install --no-interaction --prefer-source
@@ -15,7 +13,10 @@ install:
 script:
   - vendor/bin/phpunit
 
-matrix:
+jobs:
+  include:
+    - php: hhvm
+      dist: trusty
   allow_failures:
     - php: hhvm
   fast_finish: true
