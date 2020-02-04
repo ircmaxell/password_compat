@@ -16,6 +16,4 @@ jobs:
       dist: trusty
     - php: 5.6
       dist: xenial
-    - php: hhvm-2.3
-      dist: trusty
   fast_finish: true
