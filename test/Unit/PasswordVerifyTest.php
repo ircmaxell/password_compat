@@ -7,10 +7,6 @@ class PasswordVerifyTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testFailedType() {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestSkipped("HHVM does not support integer arguments");    
-        }
-
         $this->assertFalse(password_verify(123, 123));
     }
 
