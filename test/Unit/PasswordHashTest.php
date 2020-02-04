@@ -35,6 +35,10 @@ class PasswordHashTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testIntegerBehavior() {
+        if (defined('HHVM_VERSION')) {
+            $this->markTestSkipped("HHVM does not support integer arguments");    
+        }
+
         $hash = password_hash(12345, PASSWORD_BCRYPT, array("salt" => "1234567890123456789012345678901234567890"));
         $this->assertEquals('$2y$10$123456789012345678901ujczD5TiARVFtc68bZCAlbEg1fCIexfO', $hash);
     }    
