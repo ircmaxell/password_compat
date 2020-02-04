@@ -18,6 +18,4 @@ jobs:
       dist: xenial
     - php: hhvm-3.18
       dist: trusty
-  allow_failures:
-    - php: hhvm-3.18
   fast_finish: true
