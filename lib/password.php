@@ -101,12 +101,12 @@ namespace {
             } else {
                 $buffer = '';
                 $buffer_valid = false;
-                if (function_exists('mcrypt_create_iv') && !defined('PHALANGER')) {
-                    $buffer = mcrypt_create_iv($raw_salt_len, MCRYPT_DEV_URANDOM);
-                    if ($buffer) {
-                        $buffer_valid = true;
-                    }
+                
+                if (function_exists('random_bytes')) {
+                    $buffer = random_bytes($raw_salt_len);
+                    $buffer_valid = true;
                 }
+                
                 if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
                     $strong = false;
                     $buffer = openssl_random_pseudo_bytes($raw_salt_len, $strong);
@@ -114,30 +114,23 @@ namespace {
                         $buffer_valid = true;
                     }
                 }
+                
                 if (!$buffer_valid && @is_readable('/dev/urandom')) {
-                    $file = fopen('/dev/urandom', 'r');
-                    $read = 0;
-                    $local_buffer = '';
-                    while ($read < $raw_salt_len) {
-                        $local_buffer .= fread($file, $raw_salt_len - $read);
-                        $read = PasswordCompat\binary\_strlen($local_buffer);
+                    $file = fopen('/dev/urandom', 'rb');
+                    if ($file) {
+                        $buffer = fread($file, $raw_salt_len);
+                        fclose($file);
+                        $buffer_valid = PasswordCompat\binary\_strlen($buffer) === $raw_salt_len;
                     }
-                    fclose($file);
-                    if ($read >= $raw_salt_len) {
-                        $buffer_valid = true;
-                    }
-                    $buffer = str_pad($buffer, $raw_salt_len, "\0") ^ str_pad($local_buffer, $raw_salt_len, "\0");
                 }
+                
                 if (!$buffer_valid || PasswordCompat\binary\_strlen($buffer) < $raw_salt_len) {
                     $buffer_length = PasswordCompat\binary\_strlen($buffer);
-                    for ($i = 0; $i < $raw_salt_len; $i++) {
-                        if ($i < $buffer_length) {
-                            $buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
-                        } else {
-                            $buffer .= chr(mt_rand(0, 255));
-                        }
+                    for ($i = $buffer_length; $i < $raw_salt_len; $i++) {
+                        $buffer .= chr(mt_rand(0, 255));
                     }
                 }
+                
                 $salt = $buffer;
                 $salt_req_encoding = true;
             }
