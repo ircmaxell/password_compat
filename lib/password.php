@@ -108,8 +108,11 @@ namespace {
                 }
                 
                 if (!$buffer_valid && function_exists('openssl_random_pseudo_bytes')) {
+                    $strong = false;
                     $buffer = openssl_random_pseudo_bytes($raw_salt_len, $strong);
-                    $buffer_valid = $buffer && $strong;
+                    if ($buffer && $strong) {
+                        $buffer_valid = true;
+                    }
                 }
                 
                 if (!$buffer_valid && @is_readable('/dev/urandom')) {
